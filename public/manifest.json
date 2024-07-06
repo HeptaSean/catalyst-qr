@@ -1,0 +1,13 @@
+{
+    "name": "Catalyst QR",
+    "icons": [
+        {
+            "src": "logo.svg",
+            "type": "image/svg+xml",
+            "sizes": "any"
+        }
+    ],
+    "start_url": ".",
+    "display": "standalone",
+    "orientation": "portrait"
+}
