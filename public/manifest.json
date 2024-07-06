@@ -1,5 +1,8 @@
 {
     "name": "Catalyst QR",
+    "start_url": ".",
+    "display": "standalone",
+    "orientation": "portrait",
     "icons": [
         {
             "src": "logo.svg",
@@ -7,7 +10,6 @@
             "sizes": "any"
         }
     ],
-    "start_url": ".",
-    "display": "standalone",
-    "orientation": "portrait"
+    "theme_color": "#162633",
+    "background_color": "#162633"
 }
