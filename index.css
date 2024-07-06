@@ -1,0 +1,85 @@
+body {
+    background: #bcdaf8;
+    color: #162633;
+    margin: 10px;
+}
+
+body > * {
+    width: 100%;
+    max-width: 720px;
+    margin: 10px auto;
+    text-align: center;
+}
+
+h1 {
+    font-size: 22pt;
+}
+
+button#button {
+    background: #79b5e7;
+    padding: 5px;
+    border-color: #446987;
+    border-radius: 10px;
+    font-size: 14pt;
+}
+
+#container {
+    min-height: 360px;
+    background: #79b5e7;
+}
+
+canvas#canvas {
+    display: block;
+    margin: 0px auto;
+}
+
+table#results {
+    table-layout: fixed;
+}
+
+tr.large th, tr.large td {
+    font-size: 18pt;
+}
+
+tr.medium th, tr.medium td {
+    font-size: 14pt;
+}
+
+tr.small th, tr.small td {
+    font-size: 10pt;
+}
+
+th {
+    width: 120px;
+    text-align: left;
+}
+
+td {
+    text-align: left;
+}
+
+td > pre {
+    display: block;
+    white-space: pre-wrap;
+    word-break: break-all;
+    hyphens: none;
+    margin: 0px;
+    padding: 5px;
+    background: #79b5e7;
+}
+
+tr.medium td > pre {
+    font-size: 10pt;
+}
+
+tr.small td > pre {
+    font-size: 8pt;
+}
+
+span.pin {
+    display: inline-block;
+    margin-right: 10px;
+    padding: 5px;
+    background: #79b5e7;
+    font-size: 18pt;
+}

@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <title>Catalyst QR</title>
+        <link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+        <link rel="manifest" href="manifest.json">
+        <link rel="stylesheet" href="index.css">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    </head>
+    <body>
+        <h1>Catalyst QR</h1>
+        <div>
+            <button id="button">Start</button>
+        </div>
+        <div id="container">
+            <canvas id="canvas"></canvas>
+        </div>
+        <table id="results">
+            <tr class="medium">
+                <th>QR Data</th>
+                <td>
+                    <pre id="qrdata">&lt;No data from QR&gt;</pre>
+                </td>
+            </tr>
+            <tr class="small">
+                <th>Salt</th>
+                <td>
+                    <pre id="salt">&lt;No data from QR&gt;</pre>
+                </td>
+            </tr>
+            <tr class="small">
+                <th>Nonce</th>
+                <td>
+                    <pre id="nonce">&lt;No data from QR&gt;</pre>
+                </td>
+            </tr>
+            <tr class="small">
+                <th>Encrypted</th>
+                <td>
+                    <pre id="encrypted">&lt;No data from QR&gt;</pre>
+                </td>
+            </tr>
+            <tr class="small">
+                <th>Tag</th>
+                <td>
+                    <pre id="tag">&lt;No data from QR&gt;</pre>
+                </td>
+            </tr>
+            <tr class="large">
+                <th>PIN</th>
+                <td>
+                    <span class="pin" id="one">0</span>
+                    <span class="pin" id="two">0</span>
+                    <span class="pin" id="three">0</span>
+                    <span class="pin" id="four">0</span>
+                </td>
+            </tr>
+            <tr class="small">
+                <th>Key</th>
+                <td>
+                    <pre id="key">&lt;No data from derivation&gt;</pre>
+                </td>
+            </tr>
+            <tr class="medium">
+                <th>Decrypted</th>
+                <td>
+                    <pre id="decrypted">&lt;No data from decryption&gt;</pre>
+                </td>
+            </tr>
+        </table>
+        <script type="module" src="index.js" async></script>
+    </body>
+</html>
