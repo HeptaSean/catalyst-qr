@@ -126,7 +126,7 @@ The `decrypt` function that it calls can be found at:
 And the `derive_symmetric_key` function that that in turn uses is at:
 [https://github.com/input-output-hk/chain-wallet-libs/blob/master/symmetric-cipher/src/lib.rs#L156-L163](https://github.com/input-output-hk/chain-wallet-libs/blob/master/symmetric-cipher/src/lib.rs#L156-L163)
 
-From this information, we can conclude that we have to:
+From this information, I could conclude that the app has to:
 1. iterate over all 10 000 possible PINs,
 2. derive a symmetric key from each PIN using the PBKDF2 algorithm with
    HMAC-SHA512 and a salt that is found in the data from the QR code,
@@ -135,7 +135,7 @@ From this information, we can conclude that we have to:
    if we get a tag (checksum) that is the last element found in the data
    from the QR code.
 
-So, for the key derivation we use the
+So, for the key derivation I have used the
 [pbkdf2](https://www.npmjs.com/package/pbkdf2) Javascript package and for
 the decryption the [chacha-js](https://www.npmjs.com/package/chacha-js)
 package.
@@ -146,7 +146,7 @@ $ git clone https://github.com/HeptaSean/catalyst-qr.git
 $ cd catalyst-qr/
 $ npm install
 ```
-We use [Vite](https://vitejs.dev/) as Javascript bundler and it has
+I use [Vite](https://vitejs.dev/) as Javascript bundler and it has
 pre-configured the `package.json` so that `npm run dev` runs a development
 server that automatically updates when editing the code, `npm run build`
 builds the project in `dist/`, and `npm run preview` lets you preview what
