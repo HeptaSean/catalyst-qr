@@ -17,12 +17,16 @@ that could speed that up, but it works, so I wanted to get it out while
 there is still some time in the current fund.
 
 ## Example
-In the following screenshot we see the app having scanned an old, unused
-Catalyst QR from me and broken the PIN `0511` from it:
-![Example of using catalyst-qr](example/catalyst-qr.png)
+In the first screenshot, we see the app having scanned an old, unused
+Catalyst QR from me and broken the PIN `0511` from it.
+In the second screenshot, the old registration given to me by Yoroi is
+shown.
 
-The old registration given to me by Yoroi looked like this:
-![Example registration from Yoroi](example/yoroi.png)
+<img src="example/catalyst-qr.png" alt="Example of using catalyst-qr"
+     style="width:49%; vertical-align:top;"
+/><img src="example/yoroi.png" alt="Example registration from Yoroi"
+       style="width:49%; vertical-align:top;"/>
+
 You can see that what Yoroi called the “secret code” is exactly the
 encrypted content of the QR code.
 
