@@ -1,11 +1,3 @@
-import { Buffer } from 'buffer'
-import { pbkdf2Sync } from 'pbkdf2'
-import { createDecipher } from 'chacha-js'
-
-const button = document.getElementById('button')
-button.innerHTML = "Start"
-button.onclick = startVideo
-
 const container = document.getElementById('container')
 const canvas = document.getElementById('canvas')
 const context = canvas.getContext('2d')
@@ -22,19 +14,25 @@ const fourEl = document.getElementById('four')
 const keyEl = document.getElementById('key')
 const decryptedEl = document.getElementById('decrypted')
 
-let video = null
+const button = document.getElementById('button')
+button.innerHTML = "Start"
+button.onclick = startVideo
+
 let qrworker = null
+let video = null
 
 function startVideo() {
     button.innerHTML = "Stop"
     button.onclick = stopVideo
-    video = document.createElement('video')
+
     qrworker = new Worker(new URL('./qrworker.js', import.meta.url),
                           {type: 'module'})
     qrworker.onmessage = (message) => {
         stopVideo()
         startDecrypt(message.data)
     }
+
+    video = document.createElement('video')
     navigator.mediaDevices.getUserMedia({
         audio: false,
         video: {facingMode: 'environment'}
@@ -42,6 +40,7 @@ function startVideo() {
         video.srcObject = stream
         video.setAttribute('playsinline', 'true')
         video.play()
+
         requestAnimationFrame(tick)
     })
 }
@@ -51,6 +50,7 @@ function stopVideo() {
     video.pause()
     video.srcObject.getVideoTracks().forEach(track => track.stop())
     video.srcObject = null
+
     button.innerHTML = "Start"
     button.onclick = startVideo
 }
@@ -76,35 +76,39 @@ function tick(time) {
             qrworker.postMessage({
                 data: imageData.data,
                 width: imageData.width,
-                height: imageData.height
+                height: imageData.height,
             })
         }
     }
+
     requestAnimationFrame(tick)
 }
 
-let cancel = false
-
-let salt = null
-let nonce = null
-let encrypted = null
-let tag = null
-let key = null
-
-let one = 0
-let two = 0
-let three = 0
-var four = 0
+let pinworker = null
 
 function startDecrypt(qrdata) {
     button.innerHTML = "Stop"
     button.onclick = stopDecrypt
 
-    cancel = false
+    pinworker = new Worker(new URL('./pinworker.js', import.meta.url),
+                           {type: 'module'})
+    pinworker.onmessage = (message) => {
+        const {pin, key, decrypted} = message.data
+
+        if (decrypted) {
+            stopDecrypt()
+            decryptedEl.innerHTML = decrypted
+        }
+
+        oneEl.innerHTML = pin[0]
+        twoEl.innerHTML = pin[1]
+        threeEl.innerHTML = pin[2]
+        fourEl.innerHTML = pin[3]
+        keyEl.innerHTML = key
+    }
 
     qrdataEl.innerHTML = qrdata
-    const raw = new Buffer.from(qrdata, 'hex')
-    if (raw.length !== 109) {
+    if (qrdata.length !== 218) {
         const message = "&lt;QR data has wrong length!&gt;"
         saltEl.innerHTML = message
         nonceEl.innerHTML = message
@@ -113,8 +117,7 @@ function startDecrypt(qrdata) {
         stopDecrypt()
         return
     }
-    const protocol = raw[0]
-    if (protocol !== 1) {
+    if (qrdata.substring(0, 2) !== '01') {
         const message = "&lt;Invalid protocol in QR data!&gt;"
         saltEl.innerHTML = message
         nonceEl.innerHTML = message
@@ -123,100 +126,33 @@ function startDecrypt(qrdata) {
         stopDecrypt()
         return
     }
-    salt = raw.subarray(1, 17)
-    saltEl.innerHTML = salt.toString('hex')
-    nonce = raw.subarray(17, 29)
-    nonceEl.innerHTML = nonce.toString('hex')
-    encrypted = raw.subarray(29, 93)
-    encryptedEl.innerHTML = encrypted.toString('hex')
-    tag = raw.subarray(93, 109)
-    tagEl.innerHTML = tag.toString('hex')
+    const salt = qrdata.substring(2, 34)
+    saltEl.innerHTML = salt
+    const nonce = qrdata.substring(34, 58)
+    nonceEl.innerHTML = nonce
+    const encrypted = qrdata.substring(58, 186)
+    encryptedEl.innerHTML = encrypted
+    const tag = qrdata.substring(186, 218)
+    tagEl.innerHTML = tag
 
-    one = 0
-    oneEl.innerHTML = one.toString()
-    two = 0
-    twoEl.innerHTML = two.toString()
-    three = 0
-    threeEl.innerHTML = three.toString()
-    four = 0
-    fourEl.innerHTML = four.toString()
+    oneEl.innerHTML = "0"
+    twoEl.innerHTML = "0"
+    threeEl.innerHTML = "0"
+    fourEl.innerHTML = "0"
     keyEl.innerHTML = "&lt;No data from derivation&gt;"
     decryptedEl.innerHTML = "&lt;No data from decryption&gt;"
 
-    requestAnimationFrame(derive)
-}
-
-function derive(time) {
-    if (cancel) {
-        return
-    }
-
-    const pin = new Buffer.from([one, two, three, four])
-    key = pbkdf2Sync(pin, salt, 12983, 32, 'sha512')
-    keyEl.innerHTML = one.toString() + two.toString() + three.toString() +
-                      four.toString() + ' => ' + key.toString('hex')
-
-    requestAnimationFrame(decrypt)
-}
-
-function decrypt(time) {
-    if (cancel) {
-        return
-    }
-
-    const decipher = createDecipher(key, nonce)
-    decipher.setAuthTag(tag)
-    try {
-        let decryptedRaw = decipher.update(encrypted)
-        decryptedRaw += decipher.final()
-        const decrypted = new Buffer.from(decryptedRaw)
-        decryptedEl.innerHTML = decrypted.toString('hex')
-        stopDecrypt()
-        return
-    } catch(e) {
-    }
-
-    decryptedEl.innerHTML = "&lt;No data from decryption&gt;"
-    requestAnimationFrame(increment)
-}
-
-function increment(time) {
-    if (cancel) {
-        return
-    }
-
-    four += 1
-    if (four > 9) {
-        four = 0
-        three += 1
-    }
-    if (three > 9) {
-        three = 0
-        two += 1
-    }
-    if (two > 9) {
-        two = 0
-        one += 1
-    }
-    if (one > 9) {
-        one = 9
-        two = 9
-        three = 9
-        four = 9
-        stopDecrypt()
-        return
-    }
-
-    oneEl.innerHTML = one.toString()
-    twoEl.innerHTML = two.toString()
-    threeEl.innerHTML = three.toString()
-    fourEl.innerHTML = four.toString()
-
-    requestAnimationFrame(derive)
+    pinworker.postMessage({
+        salt: salt,
+        nonce: nonce,
+        encrypted: encrypted,
+        tag: tag,
+    })
 }
 
 function stopDecrypt() {
-    cancel = true
+    pinworker.terminate()
+
     button.innerHTML = "Start"
     button.onclick = startVideo
 }

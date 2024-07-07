@@ -7,15 +7,6 @@ have forgotten it.
 (It does that on your device in your browser.
 No data are transmitted to any server.)
 
-The app is a bit slow, so be prepared that it needs up to ca. 2 hours to
-scan all possible PINs (if your PIN comes early, has a low number in the
-first digits, you are lucky).
-You can see the progress that it makes.
-
-I'll have to check if there are more efficient Javascript crypto libraries
-that could speed that up, but it works, so I wanted to get it out while
-there is still some time in the current fund.
-
 ## Example
 In the first screenshot, we see the app having scanned an old, unused
 Catalyst QR from me and broken the PIN `0511` from it.
@@ -30,15 +21,13 @@ shown.
 You can see that what Yoroi called the “secret code” is exactly the
 encrypted content of the QR code.
 
-Strangely enough, the bytes that it decrypted are totally different than
-what `catalyst-toolbox` decrypts:
+The decrypted hex string is exactly the same that is also given by
+`catalyst-toolbox` when decoding the same QR code:
 ```shellsession
 $ catalyst-toolbox qr-code decode -i example/yoroi.png -p 0511 img | bech32
 70e4c8fd4da354b2b56c2056e0234b2e7632bc70950192a8d0ec59cd7db7605e
 9fa14b10eae7fdcc842a965b03ef5e9ad094339db9b94342aee5402ab906be94
 ```
-Should be investigated in future iterations, but it does get the PIN and
-that was the goal.
 
 ## Context
 Cardano's [Project Catalyst](https://docs.projectcatalyst.io/) uses a QR
